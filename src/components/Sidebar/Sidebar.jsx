@@ -11,15 +11,7 @@ import { RiText } from "react-icons/ri";
 import { CiImageOn } from "react-icons/ci";
 import { IoCloudUploadOutline } from "react-icons/io5";
 
-const optionRef = {
-    1: <ImageLib />,
-    2: <TextLib />,
-    3: <UnsplashLib />,
-    4: <PinterestLib />,
-    5: <ImageUpload />
-}
-
-const Sidebar = () => {
+const Sidebar = ({ onAdd, stageRef }) => {
     const [selectOption, setSelectOption] = useState(0);
 
     const handleSelectOption = option => {
@@ -60,7 +52,13 @@ const Sidebar = () => {
                     <p>Upload</p>
                 </button>
             </div>
-            { selectOption ? optionRef[selectOption] : null }
+            { selectOption === 1 ? <ImageLib handleClose={() => setSelectOption(0)} onAdd={onAdd} stageRef={stageRef} />
+                : selectOption === 2 ? <TextLib />
+                    : selectOption === 3 ? <UnsplashLib />
+                        : selectOption === 4 ? <PinterestLib />
+                            : selectOption === 5 ? <ImageUpload />
+                                : null
+            }
         </div>
     );
 };
