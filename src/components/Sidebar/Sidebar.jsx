@@ -19,7 +19,7 @@ const Sidebar = ({ onAdd, stageRef }) => {
     }
 
     return (
-        <div className={`flex`}>
+        <div className={`absolute z-20 h-sidebar flex`}>
             <div className={`w-28 h-full space-y-2 flex flex-col items-center bg-slate-700`}>
                 <button type={`button`} onClick={() => handleSelectOption(1)} className={`w-full p-5 text-zinc-200 ${selectOption === 1 && 'bg-slate-600 rounded-l-2xl'} hover:bg-slate-600 active:translate-x-2 transition-all transform-gpu`}>
                     <div className={`flex justify-center`}>

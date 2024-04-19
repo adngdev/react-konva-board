@@ -1,10 +1,12 @@
-import { useReducer, useRef } from 'react';
-import { Layer, Stage } from 'react-konva';
+import { useEffect, useReducer, useRef, useState } from 'react';
+import { Layer, Rect, Stage } from 'react-konva';
 
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
+import ImageCard from './components/Cards/ImageCard.jsx';
 
 function App() {
-    const stageRef = useRef(null)
+    const stageRef = useRef(null);
+    const containerRef = useRef(null);
 
     const [state, dispatch] = useReducer((state, action) => {
         switch (action.type) {
@@ -14,15 +16,25 @@ function App() {
             case 'ADD_ITEM':
                 return { selectedItem: action.valueId, items: [...state.items, action.value] };
 
+            case 'SELECT_ITEM':
+                return { ...state, selectedItem: action.valueId };
+
+            case 'DESELECT_ITEM':
+                return { ...state, selectedItem: '' };
+
+            case 'MOVE_ITEM':
+                return { selectedItem: action.valueId, items: [...state.items.map(item => item.id === action.valueId ? { ...item, x: action.valueX, y: action.valueY } : item)] };
+
+
             default:
                 return state;
         }
     }, {
-        selectedItems: '',
+        selectedItem: '',
         items: []
     });
 
-    const handleAddImage = (id, url, x, y) => {
+    const handleAddImage = (id, url, x, y, width, height) => {
         dispatch({
             type: 'ADD_ITEM',
             valueId: id,
@@ -33,12 +45,20 @@ function App() {
                 x: x,
                 y: y,
                 rotation: 0,
-                width: 200,
-                height: 200,
+                width: width,
+                height: height,
                 isXFlipped: false,
                 isYFlipped: false
             }
         });
+    }
+
+    const handleSelectItem = id => {
+        dispatch({ type: 'SELECT_ITEM', valueId: id });
+    }
+
+    const handleMoveItem = (id, x, y) => {
+        dispatch({ type: 'MOVE_ITEM', valueId: id, valueX: x, valueY: y });
     }
 
     return (
@@ -46,11 +66,31 @@ function App() {
             <div className={`fixed inset-0 h-20 bg-violet-400`}>
             </div>
             <div className={`h-screen pt-20 flex`}>
+                {console.log(state)}
                 <Sidebar onAdd={handleAddImage} stageRef={stageRef} />
-                <div className={`w-full h-full-lib bg-zinc-200`}>
-                    <Stage ref={stageRef} width={parent.innerWidth} height={1000} style={{ backgroundColor: 'black' }}>
+                <div ref={containerRef} className={`h-full w-full`}>
+                    <Stage ref={stageRef} width={containerRef.current?.clientWidth} height={containerRef.current?.clientHeight}>
                         <Layer>
-
+                            <Rect
+                                x={0}
+                                y={0}
+                                fill={`white`}
+                                width={containerRef.current?.clientWidth}
+                                height={containerRef.current?.clientHeight}
+                                draggable={false}
+                                onClick={() => dispatch({ type: 'DESELECT_ITEM' })}
+                            />
+                            { state.items.map(item =>
+                                item.type === 'IMAGE' ?
+                                    <ImageCard
+                                        key={item.id}
+                                        item={item}
+                                        isSelected={state.selectedItem === item.id}
+                                        onSelect={handleSelectItem}
+                                        onMoveEnd={handleMoveItem}
+                                    />
+                                    : null
+                            )}
                         </Layer>
                     </Stage>
                 </div>

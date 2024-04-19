@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       height: {
-        'height-lib': 'calc(100vh - 200px)'
+        'sidebar': 'calc(100vh - 80px)',
+        'lib': 'calc(100vh - 200px)'
       }
     },
   },
