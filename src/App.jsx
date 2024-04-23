@@ -3,6 +3,7 @@ import { Layer, Rect, Stage } from 'react-konva';
 
 import Sidebar from "./components/Sidebar/Sidebar.jsx";
 import ImageCard from './components/Cards/ImageCard.jsx';
+import Navbar from "./components/Navbar/Navbar.jsx";
 
 function App() {
     const stageRef = useRef(null);
@@ -69,10 +70,8 @@ function App() {
 
     return (
         <div className={`relative`}>
-            <div className={`fixed inset-0 h-20 bg-violet-400`}>
-            </div>
+            <Navbar />
             <div className={`h-screen pt-20 flex`}>
-                {console.log(state)}
                 <Sidebar onAdd={handleAddImage} stageRef={stageRef} />
                 <div ref={containerRef} className={`h-full w-full`}>
                     <Stage ref={stageRef} width={containerRef.current?.clientWidth} height={containerRef.current?.clientHeight}>
