@@ -27,8 +27,6 @@ const ImageLib = ({ handleClose, onAdd, stageRef }) => {
                                 const ref = stageRef.current;
                                 ref.setPointersPositions(e);
 
-                                console.log(e)
-
                                 const coordinate = ref.getPointerPosition();
                                 coordinate && onAdd(e.timeStamp, url, coordinate.x, coordinate.y, e.target.naturalWidth, e.target.naturalHeight);
                             }}
