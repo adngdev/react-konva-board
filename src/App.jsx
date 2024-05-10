@@ -11,6 +11,7 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route
             index
             element={<Board />}
+            //make a board loader
         />
         <Route path={`menu`}>
             <Route

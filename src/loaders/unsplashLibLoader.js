@@ -3,7 +3,7 @@ import { defer } from "react-router-dom";
 import { createApi } from "unsplash-js";
 
 const unsplashLibLoader = async () => defer({
-    data: new Promise((resolve, reject) => {
+    unpsplashData: new Promise((resolve, reject) => {
         const api = createApi({
             accessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
         });
@@ -19,7 +19,9 @@ const unsplashLibLoader = async () => defer({
                 resolve({ images });
             })
             .catch(error => reject(error));
-    })
+    }),
+    //do another promise
+    u
 });
 
 export default unsplashLibLoader;
