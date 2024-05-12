@@ -3,11 +3,10 @@ import { Layer, Rect, Stage } from 'react-konva';
 
 import Sidebar from "../components/Sidebar/Sidebar.jsx";
 import ImageCard from '../components/Cards/ImageCard.jsx';
-import Navbar from "../components/Navbar/Navbar.jsx";
+import Toolbar from '../components/Toolbar/Toolbar.jsx';
 
 const Board = () => {
     const stageRef = useRef(null);
-    const containerRef = useRef(null);
 
     const [state, dispatch] = useReducer((state, action) => {
         switch (action.type) {
@@ -28,6 +27,9 @@ const Board = () => {
 
             case 'CHANGE_DIMENSION':
                 return { selectedItem: action.valueId, items: [...state.items.map(item => item.id === action.valueId ? { ...item, width: action.valueWidth, height: action.valueHeight, rotation: action.valueR, x: action.valueX, y: action.valueY } : item)] };
+
+            case 'FLIP':
+                return { ...state, items: [...state.items.map(item => item.id === state.selectedItem ? { ...item, isXFlipped: !item.isXFlipped } : item)] }
 
             default:
                 return state;
@@ -69,19 +71,19 @@ const Board = () => {
     }
 
     return (
-        <div className={`relative`}>
-            <Navbar />
-            <div className={`h-screen pt-20 flex`}>
-                <Sidebar onAdd={handleAddImage} stageRef={stageRef} />
-                <div ref={containerRef} className={`h-full w-full`}>
-                    <Stage ref={stageRef} width={containerRef.current?.clientWidth} height={containerRef.current?.clientHeight}>
+        <div className={`h-full pt-16 flex`}>
+            <Sidebar onAdd={handleAddImage} stageRef={stageRef} />
+            <div className={`w-full h-sidebar bg-slate-200`}>
+                <Toolbar />
+                <div className={`h-lib flex justify-center items-center`}>
+                    <Stage ref={stageRef} width={1000} height={500}>
                         <Layer>
                             <Rect
                                 x={0}
                                 y={0}
                                 fill={`white`}
-                                width={containerRef.current?.clientWidth}
-                                height={containerRef.current?.clientHeight}
+                                width={1000}
+                                height={500}
                                 draggable={false}
                                 onClick={() => dispatch({ type: 'DESELECT_ITEM' })}
                             />
@@ -100,7 +102,6 @@ const Board = () => {
                         </Layer>
                     </Stage>
                 </div>
-
             </div>
         </div>
     );

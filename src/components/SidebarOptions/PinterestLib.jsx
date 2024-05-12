@@ -1,6 +1,6 @@
 const PinterestLib = () => {
     return (
-        <div className={`h-full w-96 bg-slate-600 rounded-r-lg`}>
+        <div className={`h-full w-full`}>
             PinterestLib
         </div>
     );

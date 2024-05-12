@@ -1,64 +1,53 @@
-import { useState } from "react";
-
-import ImageLib from "../SidebarOptions/ImageLib.jsx";
-import TextLib from "../SidebarOptions/TextLib.jsx";
-import UnsplashLib from "../SidebarOptions/UnsplashLib.jsx";
-import PinterestLib from "../SidebarOptions/PinterestLib.jsx";
-import ImageUpload from "../SidebarOptions/ImageUpload.jsx";
+import { lazy, Suspense, useState } from 'react';
 
 import { FaPinterestP, FaUnsplash } from "react-icons/fa";
 import { RiText } from "react-icons/ri";
 import { CiImageOn } from "react-icons/ci";
-import { IoCloudUploadOutline } from "react-icons/io5";
+
+const HiddenSidebar = lazy(() => import('./HiddenSidebar.jsx'));
 
 const Sidebar = ({ onAdd, stageRef }) => {
     const [selectOption, setSelectOption] = useState(0);
 
     const handleSelectOption = option => {
         setSelectOption(option);
-    }
+    };
+
+    const handleClose = () => {
+        setSelectOption(0);
+    };
 
     return (
-        <div className={`absolute z-20 h-sidebar flex`}>
-            <div className={`w-28 h-full space-y-2 flex flex-col items-center bg-slate-700`}>
-                <button type={`button`} onClick={() => handleSelectOption(1)} className={`w-full p-5 text-zinc-200 ${selectOption === 1 && 'bg-slate-600 rounded-l-2xl'} hover:bg-slate-600 active:translate-x-2 transition-all transform-gpu`}>
+        <div className={`fixed z-20 h-sidebar flex`}>
+            <div className={`w-24 p-1 h-full space-y-2 flex flex-col items-center bg-zinc-200 border-r border-zinc-300`}>
+                <button type={`button`} onClick={() => handleSelectOption(1)} className={`w-full p-5 rounded-lg ${selectOption === 1 && 'bg-white border border-zinc-300 shadow-sm'} hover:bg-zinc-300 active:scale-95 transition-all transform-gpu`}>
                     <div className={`flex justify-center`}>
                         <CiImageOn size={30} />
                     </div>
-                    <p>Images</p>
+                    <p className={`text-xs`}>Images</p>
                 </button>
-                <button type={`button`} onClick={() => handleSelectOption(2)}  className={`w-full p-5 text-zinc-200 ${selectOption === 2 && 'bg-slate-600 rounded-l-2xl'} hover:bg-slate-600 active:translate-x-2 transition-all transform-gpu`}>
+                <button type={`button`} onClick={() => handleSelectOption(2)}  className={`w-full p-5 rounded-lg ${selectOption === 2 && 'bg-white border border-zinc-300 shadow-sm'} hover:bg-zinc-300 active:scale-95 transition-all transform-gpu`}>
                     <div className={`flex justify-center`}>
                         <RiText size={30} />
                     </div>
-                    <p>Text</p>
+                    <p className={`text-xs`}>Text</p>
                 </button>
-                <button type={`button`} onClick={() => handleSelectOption(3)} className={`w-full p-5 text-zinc-200 ${selectOption === 3 && 'bg-slate-600 rounded-l-2xl'} hover:bg-slate-600 active:translate-x-2 transition-all transform-gpu`}>
+                <button type={`button`} onClick={() => handleSelectOption(3)} className={`w-full p-5 rounded-lg ${selectOption === 3 && 'bg-white border border-zinc-300 shadow-sm'} hover:bg-zinc-300 active:scale-95 transition-all transform-gpu`}>
                     <div className={`flex justify-center`}>
                         <FaUnsplash size={30} />
                     </div>
-                    <p>Unsplash</p>
+                    <p className={`text-xs`}>Unsplash</p>
                 </button>
-                <button type={`button`} onClick={() => handleSelectOption(4)} className={`w-full p-5 text-zinc-200 ${selectOption === 4 && 'bg-slate-600 rounded-l-2xl'} hover:bg-slate-600 active:translate-x-2 transition-all transform-gpu`}>
+                <button type={`button`} onClick={() => handleSelectOption(4)} className={`w-full p-5 rounded-lg ${selectOption === 4 && 'bg-white border border-zinc-300 shadow-sm'} hover:bg-zinc-300 active:scale-95 transition-all transform-gpu`}>
                     <div className={`flex justify-center`}>
                         <FaPinterestP size={30} />
                     </div>
-                    <p>Pinterest</p>
-                </button>
-                <button type={`button`} onClick={() => handleSelectOption(5)} className={`w-full p-5 text-zinc-200 ${selectOption === 5 && 'bg-slate-600 rounded-l-2xl'} hover:bg-slate-600 active:translate-x-2 transition-all transform-gpu`}>
-                    <div className={`flex justify-center`}>
-                        <IoCloudUploadOutline size={30} />
-                    </div>
-                    <p>Upload</p>
+                    <p className={`text-xs`}>Pinterest</p>
                 </button>
             </div>
-            { selectOption === 1 ? <ImageLib handleClose={() => setSelectOption(0)} onAdd={onAdd} stageRef={stageRef} />
-                : selectOption === 2 ? <TextLib />
-                    : selectOption === 3 ? <UnsplashLib />
-                        : selectOption === 4 ? <PinterestLib />
-                            : selectOption === 5 ? <ImageUpload />
-                                : null
-            }
+            <Suspense fallback={<div className={`w-96 bg-slate-50`} />}>
+                <HiddenSidebar option={selectOption} onAdd={onAdd} stageRef={stageRef} setClose={handleClose} />
+            </Suspense>
         </div>
     );
 };

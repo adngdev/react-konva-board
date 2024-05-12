@@ -2,23 +2,17 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 
 import Board from "./pages/Board.jsx";
 
-import unsplashLibLoader from "./loaders/unsplashLibLoader.js";
+import libraryLoader from "./loaders/libraryLoader.js";
 
-import UnsplashLib from "./components/SidebarOptions/UnsplashLib.jsx";
+import DefaultLayout from './layout/DefaultLayout.jsx';
 
 const router = createBrowserRouter(createRoutesFromElements(
     <Route>
-        <Route
-            index
-            element={<Board />}
-            //make a board loader
-        />
-        <Route path={`menu`}>
+        <Route element={<DefaultLayout />}>
             <Route
                 index
-                path={`unsplash`}
-                element={<UnsplashLib />}
-                loader={unsplashLibLoader}
+                element={<Board />}
+                loader={libraryLoader}
             />
         </Route>
     </Route>

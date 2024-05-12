@@ -2,8 +2,8 @@ import { defer } from "react-router-dom";
 
 import { createApi } from "unsplash-js";
 
-const unsplashLibLoader = async () => defer({
-    unpsplashData: new Promise((resolve, reject) => {
+const libraryLoader = async () => defer({
+    unsplashData: new Promise((resolve, reject) => {
         const api = createApi({
             accessKey: import.meta.env.VITE_UNSPLASH_ACCESS_KEY,
         });
@@ -14,15 +14,15 @@ const unsplashLibLoader = async () => defer({
                 const images = response.response.results.map(image => ({
                     id: image.id,
                     url: image.urls.regular,
+                    alt: image.alt_description
                 }));
 
                 resolve({ images });
             })
             .catch(error => reject(error));
     }),
-    //do another promise
-    u
+    pinterestData: new Promise((resolve, reject) => {
+    }),
 });
 
-export default unsplashLibLoader;
-
+export default libraryLoader;
