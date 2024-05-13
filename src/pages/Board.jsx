@@ -29,7 +29,27 @@ const Board = () => {
                 return { selectedItem: action.valueId, items: [...state.items.map(item => item.id === action.valueId ? { ...item, width: action.valueWidth, height: action.valueHeight, rotation: action.valueR, x: action.valueX, y: action.valueY } : item)] };
 
             case 'FLIP':
-                return { ...state, items: [...state.items.map(item => item.id === state.selectedItem ? { ...item, isXFlipped: !item.isXFlipped } : item)] }
+                return { ...state, items: [...state.items.map(item => item.id === state.selectedItem ? { ...item, isXFlipped: !item.isXFlipped } : item)] };
+
+            case 'FLOP':
+                return { ...state, items: [...state.items.map(item => item.id === state.selectedItem ? { ...item, isYFlipped: !item.isYFlipped } : item)] };
+
+            case 'MOVE_DOWN':
+                if (state.selectedItem) {
+                    const itemIndex = state.items.findIndex(item => item.id === state.selectedItem);
+                    return itemIndex !== 0 ? { ...state, items: [...state.items.slice(0, itemIndex - 1), state.items[itemIndex], ...state.items.slice(itemIndex - 1).filter(img => img.id !== state.selectedItem)] } : state;
+                } else
+                    return state;
+
+            case 'MOVE_UP':
+                if (state.selectedItem) {
+                    const itemIndex = state.items.findIndex(item => item.id === state.selectedItem);
+                    return itemIndex !== state.items.length - 1 ? { ...state, items: [...state.items.slice(0, itemIndex), state.items[itemIndex + 1], state.items[itemIndex], ...state.items.slice(itemIndex + 2)] } : state;
+                } else
+                    return state;
+
+            case 'REMOVE':
+                return state.selectedItem ? { selectedItem: '', items: [...state.items.filter(item => item.id !== state.selectedItem)] } : state;
 
             default:
                 return state;
@@ -74,7 +94,13 @@ const Board = () => {
         <div className={`h-full pt-16 flex`}>
             <Sidebar onAdd={handleAddImage} stageRef={stageRef} />
             <div className={`w-full h-sidebar bg-slate-200`}>
-                <Toolbar />
+                <Toolbar
+                    onFlip={() => dispatch({ type: 'FLIP' })}
+                    onFlop={() => dispatch({ type: 'FLOP' })}
+                    onMoveDown={() => dispatch({ type: 'MOVE_DOWN' })}
+                    onMoveUp={() => dispatch({ type: 'MOVE_UP' })}
+                    onRemove={() => dispatch({ type: 'REMOVE' })}
+                />
                 <div className={`h-lib flex justify-center items-center`}>
                     <Stage ref={stageRef} width={1000} height={500}>
                         <Layer>
