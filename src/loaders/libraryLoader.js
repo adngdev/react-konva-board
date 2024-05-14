@@ -20,9 +20,7 @@ const libraryLoader = async () => defer({
                 resolve({ images });
             })
             .catch(error => reject(error));
-    }),
-    pinterestData: new Promise((resolve, reject) => {
-    }),
+    })
 });
 
 export default libraryLoader;
