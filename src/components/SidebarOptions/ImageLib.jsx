@@ -10,7 +10,6 @@ const imgUrl = [
 const ImageLib = ({ onAdd, stageRef }) => {
     return (
         <div className={`animate-slide-up transition-all w-full h-full p-5 space-y-3`}>
-            <input type={`text`} className={`p-2 w-full border border-zinc-400 rounded-md`} placeholder={`Search Image...`} />
             <div className={`px-2 h-lib overflow-y-auto`}>
                 <div className={`grid grid-cols-2 gap-2`}>
                     { imgUrl.map((url, i) =>

@@ -9,7 +9,7 @@ const libraryLoader = async () => defer({
         });
 
         api.photos
-            .list({})
+            .list({ perPage: 20 })
             .then(response => {
                 const images = response.response.results.map(image => ({
                     id: image.id,

@@ -4,6 +4,7 @@ import { Layer, Rect, Stage } from 'react-konva';
 import Sidebar from "../components/Sidebar/Sidebar.jsx";
 import ImageCard from '../components/Cards/ImageCard.jsx';
 import Toolbar from '../components/Toolbar/Toolbar.jsx';
+import TextCard from '../components/Cards/TextCard.jsx';
 
 const Board = () => {
     const stageRef = useRef(null);
@@ -27,6 +28,12 @@ const Board = () => {
 
             case 'CHANGE_DIMENSION':
                 return { selectedItem: action.valueId, items: [...state.items.map(item => item.id === action.valueId ? { ...item, width: action.valueWidth, height: action.valueHeight, rotation: action.valueR, x: action.valueX, y: action.valueY } : item)] };
+
+            case 'CHANGE_TEXT_DIMENSION':
+                return { selectedItem: action.valueId, items: [...state.items.map(item => item.id === action.valueId ? { ...item, fontSize: action.valueFont, width: action.valueWidth, height: action.valueHeight, rotation: action.valueR, x: action.valueX, y: action.valueY } : item)] };
+
+            case 'EDIT_TEXT':
+                return { selectedItem: action.valueId, items: [...state.items.map(item => item.id === action.valueId ? { ...item, text: action.valueText, width: action.valueWidth, height: action.valueHeight } : item)] };
 
             case 'FLIP':
                 return { ...state, items: [...state.items.map(item => item.id === state.selectedItem ? { ...item, isXFlipped: !item.isXFlipped } : item)] };
@@ -78,6 +85,27 @@ const Board = () => {
         });
     }
 
+    const handleAddText = (id, font, x, y) => {
+        dispatch({
+            type: 'ADD_ITEM',
+            valueId: id,
+            value: {
+                id: id,
+                type: 'TEXT',
+                text: 'Insert Text',
+                fontFamily: font,
+                fontSize: 30,
+                x: x,
+                y: y,
+                rotation: 0,
+                width: 200,
+                height: 50,
+                isXFlipped: false,
+                isYFlipped: false
+            }
+        });
+    }
+
     const handleSelectItem = id => {
         dispatch({ type: 'SELECT_ITEM', valueId: id });
     }
@@ -90,9 +118,17 @@ const Board = () => {
         dispatch({ type: 'CHANGE_DIMENSION', valueId: id, valueWidth: width, valueHeight: height, valueRotation: rotation, valueX: x, valueY: y });
     }
 
+    const handleChangeTextDimension = (id, font, width, height, rotation, x, y) => {
+        dispatch({ type: 'CHANGE_TEXT_DIMENSION', valueId: id, valueFont: font, valueWidth: width, valueHeight: height, valueR: rotation, valueX: x, valueY: y });
+    }
+
+    const handleEditText = (id, text, width, height) => {
+        dispatch({ type: 'EDIT_TEXT', valueId: id, valueText: text, valueWidth: width, valueHeight: height });
+    };
+
     return (
         <div className={`h-full pt-16 flex`}>
-            <Sidebar onAdd={handleAddImage} stageRef={stageRef} />
+            <Sidebar onAdd={handleAddImage} onAddText={handleAddText} stageRef={stageRef} />
             <div className={`w-full h-sidebar bg-slate-200`}>
                 <Toolbar
                     onFlip={() => dispatch({ type: 'FLIP' })}
@@ -123,7 +159,16 @@ const Board = () => {
                                         onMoveEnd={handleMoveItem}
                                         onDimensionChange={handleChangeDimension}
                                     />
-                                    : null
+                                    :
+                                    <TextCard
+                                        key={item.id}
+                                        item={item}
+                                        isSelected={state.selectedItem === item.id}
+                                        onSelect={handleSelectItem}
+                                        onMoveEnd={handleMoveItem}
+                                        onDimensionChange={handleChangeTextDimension}
+                                        onTextEdit={handleEditText}
+                                    />
                             )}
                         </Layer>
                     </Stage>

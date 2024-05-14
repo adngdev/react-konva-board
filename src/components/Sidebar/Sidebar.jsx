@@ -1,12 +1,12 @@
 import { lazy, Suspense, useState } from 'react';
 
-import { FaPinterestP, FaUnsplash } from "react-icons/fa";
+import { FaUnsplash } from "react-icons/fa";
 import { RiText } from "react-icons/ri";
 import { CiImageOn } from "react-icons/ci";
 
 const HiddenSidebar = lazy(() => import('./HiddenSidebar.jsx'));
 
-const Sidebar = ({ onAdd, stageRef }) => {
+const Sidebar = ({ onAdd, onAddText, stageRef }) => {
     const [selectOption, setSelectOption] = useState(0);
 
     const handleSelectOption = option => {
@@ -38,15 +38,9 @@ const Sidebar = ({ onAdd, stageRef }) => {
                     </div>
                     <p className={`text-xs`}>Unsplash</p>
                 </button>
-                <button type={`button`} onClick={() => handleSelectOption(4)} className={`w-full p-5 rounded-lg ${selectOption === 4 && 'bg-white border border-zinc-300 shadow-sm'} hover:bg-zinc-300 active:scale-95 transition-all transform-gpu`}>
-                    <div className={`flex justify-center`}>
-                        <FaPinterestP size={30} />
-                    </div>
-                    <p className={`text-xs`}>Pinterest</p>
-                </button>
             </div>
             <Suspense fallback={<div className={`w-96 bg-slate-50`} />}>
-                <HiddenSidebar option={selectOption} onAdd={onAdd} stageRef={stageRef} setClose={handleClose} />
+                <HiddenSidebar option={selectOption} onAdd={onAdd} onAddText={onAddText} stageRef={stageRef} setClose={handleClose} />
             </Suspense>
         </div>
     );
