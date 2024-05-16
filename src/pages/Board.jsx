@@ -6,6 +6,8 @@ import ImageCard from '../components/Cards/ImageCard.jsx';
 import Toolbar from '../components/Toolbar/Toolbar.jsx';
 import TextCard from '../components/Cards/TextCard.jsx';
 
+//stringify state and store in local storage
+
 const Board = () => {
     const stageRef = useRef(null);
 
