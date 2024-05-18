@@ -1,6 +1,8 @@
 import { useReducer, useRef } from 'react';
 import { Layer, Rect, Stage } from 'react-konva';
 
+import { saveAs } from 'file-saver';
+
 import Sidebar from "../components/Sidebar/Sidebar.jsx";
 import ImageCard from '../components/Cards/ImageCard.jsx';
 import Toolbar from '../components/Toolbar/Toolbar.jsx';
@@ -128,6 +130,21 @@ const Board = () => {
         dispatch({ type: 'EDIT_TEXT', valueId: id, valueText: text, valueWidth: width, valueHeight: height });
     };
 
+    const handleDownload = () => {
+        dispatch({ type: 'DESELECT_ITEM' });
+
+        setTimeout(() => {
+            stageRef.current
+                .toBlob()
+                .then(data => {
+                    saveAs(data, `canvas.png`);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }, 500);
+    };
+
     return (
         <div className={`h-full pt-16 flex`}>
             <Sidebar onAdd={handleAddImage} onAddText={handleAddText} stageRef={stageRef} />
@@ -138,6 +155,7 @@ const Board = () => {
                     onMoveDown={() => dispatch({ type: 'MOVE_DOWN' })}
                     onMoveUp={() => dispatch({ type: 'MOVE_UP' })}
                     onRemove={() => dispatch({ type: 'REMOVE' })}
+                    onDownload={handleDownload}
                 />
                 <div className={`h-lib flex justify-center items-center`}>
                     <Stage ref={stageRef} width={1000} height={500}>
