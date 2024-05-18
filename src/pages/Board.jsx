@@ -10,20 +10,24 @@ import ImageCard from '../components/Cards/ImageCard.jsx';
 import Toolbar from '../components/Toolbar/Toolbar.jsx';
 import TextCard from '../components/Cards/TextCard.jsx';
 import OutCanvasModal from '../components/Modals/OutCanvasModal.jsx';
+import InitModal from '../components/Modals/InitModal.jsx';
 
 const Board = () => {
     const stageRef = useRef(null);
 
     const [isOutCvModalShown, setShowOutCvModal] = useState(false);
+    const [isInitModalShown, setShowInitModal] = useState(false);
 
     useEffect(() => {
-        dispatch({ type: 'INIT', value: JSON.parse(localStorage.getItem('data')) });
+        if (!!JSON.parse(localStorage.getItem('data')).length) {
+            setShowInitModal(true);
+        }
     }, []);
 
     const [state, dispatch] = useReducer((state, action) => {
         switch (action.type) {
             case 'INIT':
-                return { selectedItem: '', items: action.value };
+                return { selectedItem: '', items: action.items };
 
             case 'ADD_ITEM':
                 return { selectedItem: action.valueId, items: [...state.items, action.value] };
@@ -175,6 +179,10 @@ const Board = () => {
         toast.success('Board saved')
     };
 
+    const handleInit = items => {
+        dispatch({ type: 'INIT', items: items });
+    }
+
     return (
         <div className={`h-full pt-16 flex`}>
             <Sidebar onAdd={handleAddImage} onAddText={handleAddText} stageRef={stageRef} />
@@ -187,6 +195,11 @@ const Board = () => {
                     selectedItem={state.items.find(item => item.id === state.selectedItem)}
                 />
             }
+            <InitModal
+                isShown={isInitModalShown}
+                setShow={setShowInitModal}
+                onInit={handleInit}
+            />
             <div className={`w-full h-sidebar bg-slate-200`}>
                 <Toolbar
                     onFlip={() => dispatch({ type: 'FLIP' })}
