@@ -14,7 +14,7 @@ const InitModal = ({ isShown, setShow, onInit }) => {
                 </div>
                 <div className={`space-y-2`}>
                     <button type={`button`} onClick={() => handleLoad(JSON.parse(localStorage.getItem('data')))} className={`w-full py-2 bg-zinc-400 text-white rounded-md hover:bg-zinc-600 active:scale-95 transition-all transform-gpu`}>Continue</button>
-                    <button type={`button`} onClick={() => handleLoad([])}  className={`w-full py-2 bg-red-400 text-white rounded-md hover:bg-red-600 active:scale-95 transition-all transform-gpu`}>Start New Board</button>
+                    <button type={`button`} onClick={() => handleLoad([])}  className={`w-full py-2 bg-blue-400 text-white rounded-md hover:bg-blue-600 active:scale-95 transition-all transform-gpu`}>Start New Board</button>
                 </div>
             </div>
         </div>
