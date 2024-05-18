@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { Layer, Rect, Stage } from 'react-konva';
 
 import { toast } from 'sonner';
@@ -9,9 +9,12 @@ import Sidebar from "../components/Sidebar/Sidebar.jsx";
 import ImageCard from '../components/Cards/ImageCard.jsx';
 import Toolbar from '../components/Toolbar/Toolbar.jsx';
 import TextCard from '../components/Cards/TextCard.jsx';
+import OutCanvasModal from '../components/Modals/OutCanvasModal.jsx';
 
 const Board = () => {
     const stageRef = useRef(null);
+
+    const [isOutCvModalShown, setShowOutCvModal] = useState(false);
 
     useEffect(() => {
         dispatch({ type: 'INIT', value: JSON.parse(localStorage.getItem('data')) });
@@ -75,6 +78,9 @@ const Board = () => {
 
             case 'REMOVE':
                 return state.selectedItem ? { selectedItem: '', items: [...state.items.filter(item => item.id !== state.selectedItem)] } : state;
+
+            case 'REMOVE_ALL':
+                return { selectedItem: '', items: [] };
 
             default:
                 return state;
@@ -172,6 +178,15 @@ const Board = () => {
     return (
         <div className={`h-full pt-16 flex`}>
             <Sidebar onAdd={handleAddImage} onAddText={handleAddText} stageRef={stageRef} />
+            { state.selectedItem &&
+                <OutCanvasModal
+                    isShown={isOutCvModalShown}
+                    setShow={setShowOutCvModal}
+                    onMoveEnd={handleMoveItem}
+                    onRemove={() => dispatch({ type: 'REMOVE' })}
+                    selectedItem={state.items.find(item => item.id === state.selectedItem)}
+                />
+            }
             <div className={`w-full h-sidebar bg-slate-200`}>
                 <Toolbar
                     onFlip={() => dispatch({ type: 'FLIP' })}
@@ -179,6 +194,7 @@ const Board = () => {
                     onMoveDown={() => dispatch({ type: 'MOVE_DOWN' })}
                     onMoveUp={() => dispatch({ type: 'MOVE_UP' })}
                     onRemove={() => dispatch({ type: 'REMOVE' })}
+                    onRemoveAll={() => dispatch({ type: 'REMOVE_ALL' })}
                     onCopy={e => dispatch({ type: 'COPY', valueId: e.timeStamp })}
                     onDownload={handleDownload}
                     onSave={handleSave}
@@ -204,6 +220,7 @@ const Board = () => {
                                         onSelect={handleSelectItem}
                                         onMoveEnd={handleMoveItem}
                                         onDimensionChange={handleChangeDimension}
+                                        onOutCanvas={() => setShowOutCvModal(true)}
                                     />
                                     :
                                     <TextCard
@@ -214,6 +231,7 @@ const Board = () => {
                                         onMoveEnd={handleMoveItem}
                                         onDimensionChange={handleChangeTextDimension}
                                         onTextEdit={handleEditText}
+                                        onOutCanvas={() => setShowOutCvModal(true)}
                                     />
                             )}
                         </Layer>

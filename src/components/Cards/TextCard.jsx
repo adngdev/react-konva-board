@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Text, Transformer } from 'react-konva';
 import { Html } from 'react-konva-utils';
 
-const TextCard = ({ item, isSelected, onSelect, onMoveEnd, onTextEdit, onDimensionChange }) => {
+const TextCard = ({ item, isSelected, onSelect, onMoveEnd, onTextEdit, onDimensionChange, onOutCanvas }) => {
     const textRef = useRef(null);
     const transformerRef = useRef(null);
 
@@ -35,7 +35,13 @@ const TextCard = ({ item, isSelected, onSelect, onMoveEnd, onTextEdit, onDimensi
             ellipsis = {true}
             draggable = {true}
             onMouseDown = {() => onSelect(item.id)}
-            onDragEnd = {e => onMoveEnd(item.id, e.target.attrs.x, e.target.attrs.y)}
+            onDragEnd = {e => {
+                if (e.target.attrs.x < -item.width || e.target.attrs.y < -item.height || e.target.attrs.x > 1000 || e.target.attrs.y > 500) {
+                    onOutCanvas();
+                }
+
+                onMoveEnd(item.id, e.target.attrs.x, e.target.attrs.y);
+            }}
             onTransform={() => {
                 const node = textRef.current;
                 const scaleX = node.scaleX();
@@ -44,6 +50,11 @@ const TextCard = ({ item, isSelected, onSelect, onMoveEnd, onTextEdit, onDimensi
                 node.scaleX(1);
                 node.scaleY(1);
                 onDimensionChange(item.id, node.attrs.fontSize * scaleY, node.width() * scaleX, node.height() * scaleY, node.attrs.rotation, node.attrs.x, node.attrs.y);
+            }}
+            onTransformEnd={e => {
+                if (e.target.attrs.x < -item.width || e.target.attrs.y < -item.height || e.target.attrs.x > 1000 || e.target.attrs.y > 500) {
+                    onOutCanvas();
+                }
             }}
             onDblClick={() => setEditing(true)}
         />

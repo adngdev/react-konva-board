@@ -5,7 +5,7 @@ import { HiDownload } from 'react-icons/hi';
 import { FaRegSave } from 'react-icons/fa';
 import { FaRegCopy } from 'react-icons/fa6';
 
-const Toolbar = ({ onFlip, onFlop, onMoveDown, onMoveUp, onRemove, onDownload, onSave, onCopy }) => {
+const Toolbar = ({ onFlip, onFlop, onMoveDown, onMoveUp, onRemove, onRemoveAll, onDownload, onSave, onCopy }) => {
     return (
         <div className={`w-full z-20 h-14 text-sm bg-zinc-100 border-b border-zinc-300`}>
             <div className={`pl-32 pr-20 h-full flex gap-3 items-center`}>
@@ -34,6 +34,10 @@ const Toolbar = ({ onFlip, onFlop, onMoveDown, onMoveUp, onRemove, onDownload, o
                 <button type={`button`} onClick={onRemove} className={`px-3 py-1 flex gap-2 items-center rounded-md hover:bg-zinc-200 ease-in transition-colors`}>
                     <RiDeleteBin6Line />
                     <p>Remove</p>
+                </button>
+                <button type={`button`} onClick={onRemoveAll} className={`px-3 py-1 flex gap-2 items-center rounded-md hover:bg-zinc-200 ease-in transition-colors`}>
+                    <RiDeleteBin6Line />
+                    <p>Remove All</p>
                 </button>
                 <div className={`h-6 w-0.5 bg-zinc-300`} />
                 <button type={`button`} onClick={onSave}  className={`px-3 py-1 flex gap-2 items-center rounded-md hover:bg-zinc-200 ease-in transition-colors`}>
