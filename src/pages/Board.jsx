@@ -4,6 +4,7 @@ import { Layer, Rect, Stage } from 'react-konva';
 import { toast } from 'sonner';
 
 import { saveAs } from 'file-saver';
+import { removeBackground } from '@imgly/background-removal';
 
 import Sidebar from "../components/Sidebar/Sidebar.jsx";
 import ImageCard from '../components/Cards/ImageCard.jsx';
@@ -17,6 +18,7 @@ const Board = () => {
 
     const [isOutCvModalShown, setShowOutCvModal] = useState(false);
     const [isInitModalShown, setShowInitModal] = useState(false);
+    const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!!JSON.parse(localStorage.getItem('data')).length) {
@@ -85,6 +87,9 @@ const Board = () => {
 
             case 'REMOVE_ALL':
                 return { selectedItem: '', items: [] };
+
+            case 'REMOVE_BG':
+                return state.selectedItem ? { ...state, items: [...state.items.map(item => item.id === state.selectedItem ? { ...item, image: action.valueURL } : item)] } : state;
 
             default:
                 return state;
@@ -181,7 +186,28 @@ const Board = () => {
 
     const handleInit = items => {
         dispatch({ type: 'INIT', items: items });
-    }
+    };
+
+    const handleRemoveBg = () => {
+        setLoading(true);
+
+        const item = state.items.find(item => item.id === state.selectedItem);
+        if (item.type !== 'IMAGE') {
+            toast.error('Item is not suitable for background removal');
+        } else {
+            removeBackground(item.image)
+                .then(data => {
+                    const result = URL.createObjectURL(data);
+
+                    dispatch({ type: 'REMOVE_BG', valueURL: result });
+                    toast.success('Successfully remove background');
+                })
+                .catch(() => {
+                    toast.error('Something went wrong');
+                })
+                .finally(() => setLoading(false));
+        }
+    };
 
     return (
         <div className={`h-full pt-16 flex`}>
@@ -208,6 +234,8 @@ const Board = () => {
                     onMoveUp={() => dispatch({ type: 'MOVE_UP' })}
                     onRemove={() => dispatch({ type: 'REMOVE' })}
                     onRemoveAll={() => dispatch({ type: 'REMOVE_ALL' })}
+                    onRemoveBg={handleRemoveBg}
+                    isRemovingBg={isLoading}
                     onCopy={e => dispatch({ type: 'COPY', valueId: e.timeStamp })}
                     onDownload={handleDownload}
                     onSave={handleSave}
