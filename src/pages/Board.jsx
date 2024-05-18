@@ -63,6 +63,16 @@ const Board = () => {
                 } else
                     return state;
 
+            case 'COPY':
+                if (state.selectedItem) {
+                    const copiedItem = state.items.find(item => item.id === state.selectedItem);
+                    return {
+                        selectedItem: action.valueId,
+                        items: [...state.items, { ...copiedItem, id: action.valueId, x: copiedItem.x + 20, y: copiedItem.y + 20 }]
+                    };
+                } else
+                    return state;
+
             case 'REMOVE':
                 return state.selectedItem ? { selectedItem: '', items: [...state.items.filter(item => item.id !== state.selectedItem)] } : state;
 
@@ -144,8 +154,8 @@ const Board = () => {
                     saveAs(data, `canvas.png`);
                     toast.success('Successfully download image!');
                 })
-                .catch(error => {
-                    console.error(error);
+                .catch(() => {
+                    toast.error('Something went wrong :(');
                 });
         }, 100);
     };
@@ -169,6 +179,7 @@ const Board = () => {
                     onMoveDown={() => dispatch({ type: 'MOVE_DOWN' })}
                     onMoveUp={() => dispatch({ type: 'MOVE_UP' })}
                     onRemove={() => dispatch({ type: 'REMOVE' })}
+                    onCopy={e => dispatch({ type: 'COPY', valueId: e.timeStamp })}
                     onDownload={handleDownload}
                     onSave={handleSave}
                 />
