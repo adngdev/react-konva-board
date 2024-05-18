@@ -2,8 +2,9 @@ import { LuFlipHorizontal2, LuFlipVertical2 } from 'react-icons/lu';
 import { BsLayerBackward, BsLayerForward } from 'react-icons/bs';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { HiDownload } from 'react-icons/hi';
+import { FaRegSave } from 'react-icons/fa';
 
-const Toolbar = ({ onFlip, onFlop, onMoveDown, onMoveUp, onRemove, onDownload }) => {
+const Toolbar = ({ onFlip, onFlop, onMoveDown, onMoveUp, onRemove, onDownload, onSave }) => {
     return (
         <div className={`w-full z-20 h-14 text-sm bg-zinc-100 border-b border-zinc-300`}>
             <div className={`pl-32 pr-20 h-full flex justify-between`}>
@@ -32,6 +33,11 @@ const Toolbar = ({ onFlip, onFlop, onMoveDown, onMoveUp, onRemove, onDownload })
                     </button>
                 </div>
                 <div className={`flex gap-3 items-center`}>
+                    <button type={`button`} onClick={onSave}  className={`px-3 py-1 flex gap-2 items-center rounded-md hover:bg-zinc-200 ease-in transition-colors`}>
+                        <FaRegSave />
+                        <p>Save</p>
+                    </button>
+                    <div className={`h-6 w-0.5 bg-zinc-300`} />
                     <button type={`button`} onClick={onDownload} className={`px-3 py-1 flex gap-2 items-center bg-blue-500 text-white rounded-md hover:bg-blue-600 ease-in transition-colors`}>
                         <HiDownload />
                         <p>Download</p>

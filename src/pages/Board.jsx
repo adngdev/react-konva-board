@@ -1,5 +1,7 @@
-import { useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { Layer, Rect, Stage } from 'react-konva';
+
+import { toast } from 'sonner';
 
 import { saveAs } from 'file-saver';
 
@@ -8,10 +10,12 @@ import ImageCard from '../components/Cards/ImageCard.jsx';
 import Toolbar from '../components/Toolbar/Toolbar.jsx';
 import TextCard from '../components/Cards/TextCard.jsx';
 
-//stringify state and store in local storage
-
 const Board = () => {
     const stageRef = useRef(null);
+
+    useEffect(() => {
+        dispatch({ type: 'INIT', value: JSON.parse(localStorage.getItem('data')) });
+    }, []);
 
     const [state, dispatch] = useReducer((state, action) => {
         switch (action.type) {
@@ -138,11 +142,21 @@ const Board = () => {
                 .toBlob()
                 .then(data => {
                     saveAs(data, `canvas.png`);
+                    toast.success('Successfully download image!');
                 })
                 .catch(error => {
                     console.error(error);
                 });
-        }, 500);
+        }, 100);
+    };
+
+    const handleSave = () => {
+        if (JSON.parse(localStorage.getItem('data')).length > 0) {
+            localStorage.removeItem('data');
+        }
+
+        localStorage.setItem('data', JSON.stringify(state.items));
+        toast.success('Board saved')
     };
 
     return (
@@ -156,6 +170,7 @@ const Board = () => {
                     onMoveUp={() => dispatch({ type: 'MOVE_UP' })}
                     onRemove={() => dispatch({ type: 'REMOVE' })}
                     onDownload={handleDownload}
+                    onSave={handleSave}
                 />
                 <div className={`h-lib flex justify-center items-center`}>
                     <Stage ref={stageRef} width={1000} height={500}>
