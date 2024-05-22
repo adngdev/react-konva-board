@@ -21,9 +21,9 @@ const Board = () => {
     const [isLoading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (!!JSON.parse(localStorage.getItem('data')).length) {
-            setShowInitModal(true);
-        }
+        // if (!!JSON.parse(localStorage.getItem('data')).length) {
+        //     setShowInitModal(true);
+        // }
     }, []);
 
     const [state, dispatch] = useReducer((state, action) => {
