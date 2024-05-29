@@ -177,7 +177,7 @@ const Board = () => {
     };
 
     const handleSave = () => {
-        if (JSON.parse(localStorage.getItem('data')).length > 0) {
+        if (JSON.parse(localStorage.getItem('data'))?.length > 0) {
             localStorage.removeItem('data');
         }
 
