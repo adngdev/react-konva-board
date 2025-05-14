@@ -32,7 +32,7 @@ const Sidebar = ({ onAdd, onAddText, stageRef }) => {
                     </div>
                     <p className={`text-xs`}>Text</p>
                 </button>
-                <button type={`button`} onClick={() => handleSelectOption(3)} className={`w-full p-5 rounded-lg ${selectOption === 3 && 'bg-white border border-zinc-300 shadow-sm'} hover:bg-zinc-300 active:scale-95 transition-all transform-gpu`}>
+                <button disabled type={`button`} onClick={() => handleSelectOption(3)} className={`w-full p-5 rounded-lg ${selectOption === 3 && 'bg-white border border-zinc-300 shadow-sm'} hover:bg-zinc-300 active:scale-95 transition-all transform-gpu`}>
                     <div className={`flex justify-center`}>
                         <FaUnsplash size={30} />
                     </div>
